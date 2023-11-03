@@ -1,5 +1,7 @@
 package by.siarhiejbahdaniec.ghostban
 
+import by.siarhiejbahdaniec.ghostban.command.GhostCommand
+import by.siarhiejbahdaniec.ghostban.listener.GhostListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 

@@ -1,5 +1,6 @@
-package by.siarhiejbahdaniec.ghostban
+package by.siarhiejbahdaniec.ghostban.listener
 
+import by.siarhiejbahdaniec.ghostban.GhostBan
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler

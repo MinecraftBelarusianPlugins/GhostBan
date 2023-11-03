@@ -1,4 +1,4 @@
-package by.siarhiejbahdaniec.ghostban
+package by.siarhiejbahdaniec.ghostban.command
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
