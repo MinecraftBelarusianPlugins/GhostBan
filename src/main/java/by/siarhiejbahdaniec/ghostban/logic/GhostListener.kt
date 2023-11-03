@@ -1,4 +1,4 @@
-package by.siarhiejbahdaniec.ghostban.listener
+package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
 import org.bukkit.entity.Player

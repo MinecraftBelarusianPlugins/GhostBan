@@ -6,6 +6,7 @@ commands:
   ghost:
     usage: /ghost
     default: true
+    permission: ghost.ban.admin
 permissions:
   ghost.ban:
     description: Адключае для гульца магчымасць узаемадзейнічаць з асяроддзем, надае гульцу скін прывіда.
