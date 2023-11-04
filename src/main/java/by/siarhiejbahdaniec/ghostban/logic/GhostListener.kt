@@ -1,20 +1,36 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityPickupItemEvent
-import org.bukkit.event.entity.EntityTargetEvent
+import org.bukkit.event.entity.*
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
+import java.util.logging.Level
 
-class GhostListener: Listener {
+class GhostListener(
+    private val ghostHandler: GhostHandler,
+): Listener {
+
+    @EventHandler
+    fun onEvent(event: PlayerJoinEvent) {
+        if (event.player.hasPermission(GhostBan.GHOST_PERMISSION)) {
+            ghostHandler.handleGhost(event.player)
+        }
+    }
+
+    @EventHandler
+    fun onEvent(event: PlayerDeathEvent) {
+        if (event.entity.hasPermission(GhostBan.GHOST_PERMISSION)) {
+            event.drops.clear()
+            ghostHandler.handleGhost(event.entity)
+        }
+    }
 
     @EventHandler
     fun onEvent(event: BlockBreakEvent) {
@@ -83,7 +99,7 @@ class GhostListener: Listener {
 
     @EventHandler
     fun onEvent(event: PlayerExpChangeEvent) {
-        if (event.player.hasPermission(GhostBan.PERMISSION)) {
+        if (event.player.hasPermission(GhostBan.GHOST_PERMISSION)) {
             event.player.exp = 0f
         }
     }
@@ -144,7 +160,8 @@ class GhostListener: Listener {
     }
 
     private fun handleEvent(event: Cancellable, player: Player) {
-        if (player.hasPermission(GhostBan.PERMISSION)) {
+        Bukkit.getLogger().log(Level.WARNING, "${player.name}: " + player.effectivePermissions.joinToString { it.permission })
+        if (player.isPermissionSet(GhostBan.GHOST_PERMISSION)) {
             event.isCancelled = true
         }
     }

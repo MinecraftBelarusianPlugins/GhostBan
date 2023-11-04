@@ -2,11 +2,7 @@ name: GhostBan
 version: '${version}'
 main: by.siarhiejbahdaniec.ghostban.GhostBan
 api-version: '1.20'
-commands:
-  ghost:
-    usage: /ghost
-    default: true
-    permission: ghost.ban.admin
+depend: [LuckPerms]
 permissions:
   ghost.ban:
     description: Адключае для гульца магчымасць узаемадзейнічаць з асяроддзем, надае гульцу скін прывіда.
