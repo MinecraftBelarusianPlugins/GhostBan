@@ -26,6 +26,8 @@ class GhostBan : JavaPlugin(), ConfigHolder {
     )
 
     override fun onEnable() {
+        setupConfig()
+
         val pluginManager = Bukkit.getPluginManager()
         pluginManager.registerEvents(
             GhostListener(
@@ -34,7 +36,20 @@ class GhostBan : JavaPlugin(), ConfigHolder {
             this
         )
 
+        requireNotNull(getCommand("ghostban_reload"))
+            .setExecutor { _, _, _, _ ->
+                reloadConfigFromDisk()
+                true
+            }
+
         initLuckPermsObserver()
+    }
+
+    private fun setupConfig() {
+        saveDefaultConfig()
+        getConfig().options().copyDefaults(true)
+        saveConfig()
+        reloadConfig()
     }
 
     private fun initLuckPermsObserver() {

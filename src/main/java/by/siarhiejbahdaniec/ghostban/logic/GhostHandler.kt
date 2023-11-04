@@ -17,13 +17,15 @@ class GhostHandler(
 ) {
 
     fun handlePlayer(player: Player) {
-        if (player.isDead) {
-            return
-        }
-        if (!player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
-            handleGhost(player)
-        } else {
-            handleHumanity(player)
+        synchronized(GhostHandler::class.java) {
+            if (player.isDead) {
+                return
+            }
+            if (!player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
+                handleGhost(player)
+            } else {
+                handleHumanity(player)
+            }
         }
     }
 
@@ -46,6 +48,7 @@ class GhostHandler(
                 armor = player.inventory.armorContents.toList(),
             )
             repo.addGhost(ghostedPlayer)
+            player.sendMessage(configHolder.getString(ConfigKeys.ghostMessage))
         }
 
         player.apply {
@@ -73,5 +76,6 @@ class GhostHandler(
             inventory.setArmorContents(ghostedPlayer.armor.toTypedArray())
             resetPlayerWeather()
         }
+        player.sendMessage(configHolder.getString(ConfigKeys.humanityMessage))
     }
 }

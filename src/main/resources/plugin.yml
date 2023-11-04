@@ -3,6 +3,12 @@ version: '${version}'
 main: by.siarhiejbahdaniec.ghostban.GhostBan
 api-version: '1.20'
 depend: [LuckPerms]
+commands:
+  ghostban_reload:
+    usage: /ghostban_reload
+    permission: ghostban.reload
+    default: true
+
 permissions:
   ghostban.humanity:
     description: Дае гульцу чалавечнасць, без якой ён не можа ўзаемадзейнічаць з асяроддзем і губляе чалавечае аблічча.
