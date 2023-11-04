@@ -4,5 +4,5 @@ main: by.siarhiejbahdaniec.ghostban.GhostBan
 api-version: '1.20'
 depend: [LuckPerms]
 permissions:
-  ghost.ban:
-    description: Адключае для гульца магчымасць узаемадзейнічаць з асяроддзем, надае гульцу скін прывіда.
+  ghostban.humanity:
+    description: Дае гульцу чалавечнасць, без якой ён не можа ўзаемадзейнічаць з асяроддзем і губляе чалавечае аблічча.

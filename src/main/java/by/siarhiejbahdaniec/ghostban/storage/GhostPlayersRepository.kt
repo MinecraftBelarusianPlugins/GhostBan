@@ -38,6 +38,7 @@ class GhostPlayersRepository(dir: File) {
             KEY_ARMOR.format(id),
             ghostedPlayer.armor
         )
+        configuration.save(file)
     }
 
     fun containsGhost(id: UUID): Boolean {
@@ -47,12 +48,15 @@ class GhostPlayersRepository(dir: File) {
     fun removeGhost(id: UUID): GhostedPlayer {
         val idString = id.toString()
         @Suppress("UNCHECKED_CAST")
-        return GhostedPlayer(
+        val ghostedPlayer = GhostedPlayer(
             id = id,
             level = configuration.getInt(KEY_LEVEL.format(idString)),
             experience = configuration.getDouble(KEY_EXP.format(idString)).toFloat(),
             inventory = configuration.getList(KEY_INVENTORY.format(idString)) as List<ItemStack>,
             armor = configuration.getList(KEY_ARMOR.format(idString)) as List<ItemStack>,
         )
+        configuration.set(idString, null)
+        configuration.save(file)
+        return ghostedPlayer
     }
 }

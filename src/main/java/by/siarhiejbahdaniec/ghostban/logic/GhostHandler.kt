@@ -1,5 +1,6 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
+import by.siarhiejbahdaniec.ghostban.GhostBan
 import by.siarhiejbahdaniec.ghostban.model.GhostedPlayer
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
 import org.bukkit.entity.Player
@@ -8,7 +9,15 @@ class GhostHandler(
     private val repo: GhostPlayersRepository,
 ) {
 
-    fun handleGhost(player: Player) {
+    fun handlePlayer(player: Player) {
+        if (!player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
+            handleGhost(player)
+        } else {
+            handleHumanity(player)
+        }
+    }
+
+    private fun handleGhost(player: Player) {
         if (!repo.containsGhost(player.uniqueId)) {
             val ghostedPlayer = GhostedPlayer(
                 id = player.uniqueId,
@@ -23,8 +32,20 @@ class GhostHandler(
         player.apply {
             inventory.clear()
             equipment?.clear()
-            health = 0.5
-            foodLevel = 0
+            starvationRate = 1
+        }
+    }
+
+    private fun handleHumanity(player: Player) {
+        if (!repo.containsGhost(player.uniqueId)) {
+            return
+        }
+        val ghostedPlayer = repo.removeGhost(player.uniqueId)
+        with(player) {
+            level = ghostedPlayer.level
+            exp = ghostedPlayer.experience
+            inventory.contents = ghostedPlayer.inventory.toTypedArray()
+            inventory.setArmorContents(ghostedPlayer.armor.toTypedArray())
         }
     }
 }

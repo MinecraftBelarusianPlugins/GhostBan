@@ -1,17 +1,18 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.*
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
-import java.util.logging.Level
 
 class GhostListener(
     private val ghostHandler: GhostHandler,
@@ -19,21 +20,16 @@ class GhostListener(
 
     @EventHandler
     fun onEvent(event: PlayerJoinEvent) {
-        if (event.player.hasPermission(GhostBan.GHOST_PERMISSION)) {
-            ghostHandler.handleGhost(event.player)
-        }
+        ghostHandler.handlePlayer(event.player)
     }
 
     @EventHandler
-    fun onEvent(event: PlayerDeathEvent) {
-        if (event.entity.hasPermission(GhostBan.GHOST_PERMISSION)) {
-            event.drops.clear()
-            ghostHandler.handleGhost(event.entity)
-        }
+    fun onEvent(event: PlayerRespawnEvent) {
+        ghostHandler.handlePlayer(event.player)
     }
 
     @EventHandler
-    fun onEvent(event: BlockBreakEvent) {
+    fun onEvent(event: BlockBreakEvent)  {
         handleEvent(
             event = event,
             player = event.player
@@ -99,7 +95,7 @@ class GhostListener(
 
     @EventHandler
     fun onEvent(event: PlayerExpChangeEvent) {
-        if (event.player.hasPermission(GhostBan.GHOST_PERMISSION)) {
+        if (!event.player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
             event.player.exp = 0f
         }
     }
@@ -160,8 +156,7 @@ class GhostListener(
     }
 
     private fun handleEvent(event: Cancellable, player: Player) {
-        Bukkit.getLogger().log(Level.WARNING, "${player.name}: " + player.effectivePermissions.joinToString { it.permission })
-        if (player.isPermissionSet(GhostBan.GHOST_PERMISSION)) {
+        if (!player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
             event.isCancelled = true
         }
     }
