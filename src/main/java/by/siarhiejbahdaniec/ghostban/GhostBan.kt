@@ -1,5 +1,6 @@
 package by.siarhiejbahdaniec.ghostban
 
+import by.siarhiejbahdaniec.ghostban.config.ConfigHolder
 import by.siarhiejbahdaniec.ghostban.logic.GhostHandler
 import by.siarhiejbahdaniec.ghostban.logic.GhostListener
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
@@ -10,7 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 
-class GhostBan : JavaPlugin() {
+class GhostBan : JavaPlugin(), ConfigHolder {
 
     companion object {
         const val HUMANITY_PERMISSION = "ghostban.humanity"
@@ -48,5 +49,29 @@ class GhostBan : JavaPlugin() {
 
     override fun onDisable() {
         // Plugin shutdown logic
+    }
+
+    override fun getString(key: String?): String {
+        return getString(key, "")
+    }
+
+    override fun getString(key: String?, def: String?): String {
+        return getConfig().getString(key!!, def)!!
+    }
+
+    override fun getInt(key: String?): Int {
+        return getConfig().getInt(key!!)
+    }
+
+    override fun getBoolean(key: String?): Boolean {
+        return getConfig().getBoolean(key!!)
+    }
+
+    override fun getStringList(key: String?): List<String> {
+        return getConfig().getStringList(key!!)
+    }
+
+    override fun reloadConfigFromDisk() {
+        reloadConfig()
     }
 }
