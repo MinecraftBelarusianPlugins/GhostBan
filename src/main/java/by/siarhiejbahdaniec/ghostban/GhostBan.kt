@@ -35,14 +35,12 @@ class GhostBan : JavaPlugin() {
             .let(::requireNotNull)
             .provider
 
-        with(luckPerms.eventBus) {
-            subscribe(this@GhostBan, NodeMutateEvent::class.java) { event ->
-                val target = event.target
-                if (target is User) {
-                    val player = Bukkit.getServer().getPlayer(target.uniqueId)
-                    if (player != null) {
-                        ghostHandler.handlePlayer(player)
-                    }
+        luckPerms.eventBus.subscribe(this@GhostBan, NodeMutateEvent::class.java) { event ->
+            val target = event.target
+            if (target is User) {
+                val player = Bukkit.getServer().getPlayer(target.uniqueId)
+                if (player != null) {
+                    ghostHandler.handlePlayer(player)
                 }
             }
         }

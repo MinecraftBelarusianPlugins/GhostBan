@@ -3,6 +3,8 @@ package by.siarhiejbahdaniec.ghostban.logic
 import by.siarhiejbahdaniec.ghostban.GhostBan
 import by.siarhiejbahdaniec.ghostban.model.GhostedPlayer
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
+import org.bukkit.WeatherType
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
 class GhostHandler(
@@ -10,6 +12,9 @@ class GhostHandler(
 ) {
 
     fun handlePlayer(player: Player) {
+        if (player.isDead) {
+            return
+        }
         if (!player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
             handleGhost(player)
         } else {
@@ -32,7 +37,10 @@ class GhostHandler(
         player.apply {
             inventory.clear()
             equipment?.clear()
-            starvationRate = 1
+            saturation = 0f
+            foodLevel = 0
+            health = 0.1
+            setPlayerWeather(WeatherType.DOWNFALL)
         }
     }
 
@@ -44,8 +52,12 @@ class GhostHandler(
         with(player) {
             level = ghostedPlayer.level
             exp = ghostedPlayer.experience
+            health = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 10.0
+            foodLevel = 20
+            saturation = 5f
             inventory.contents = ghostedPlayer.inventory.toTypedArray()
             inventory.setArmorContents(ghostedPlayer.armor.toTypedArray())
+            resetPlayerWeather()
         }
     }
 }
