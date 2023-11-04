@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause.*
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
@@ -74,13 +75,13 @@ class GhostListener(
             PlayerTeleportEvent.TeleportCause.COMMAND,
             PlayerTeleportEvent.TeleportCause.EXIT_BED,
             PlayerTeleportEvent.TeleportCause.PLUGIN -> {
+                // ignore
+            }
+            else -> {
                 handleEvent(
                     event = event,
                     player = event.player
                 )
-            }
-            else -> {
-                // ignore
             }
         }
     }
@@ -115,10 +116,19 @@ class GhostListener(
     fun onEvent(event: EntityDamageEvent) {
         val entity = event.entity
         if (entity is Player) {
-            handleEvent(
-                event = event,
-                player = entity
-            )
+            when (event.cause) {
+                KILL,
+                WORLD_BORDER,
+                VOID -> {
+                    // ignore
+                }
+                else -> {
+                    handleEvent(
+                        event = event,
+                        player = entity
+                    )
+                }
+            }
         }
     }
 
