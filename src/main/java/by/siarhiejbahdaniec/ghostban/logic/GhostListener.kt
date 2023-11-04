@@ -1,6 +1,7 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
@@ -14,9 +15,11 @@ import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
+import org.spigotmc.event.player.PlayerSpawnLocationEvent
+import java.util.logging.Level
 
 class GhostListener(
-    private val ghostHandler: GhostHandler,
+    private val ghostHandler: GhostHandler
 ): Listener {
 
     @EventHandler
@@ -25,7 +28,17 @@ class GhostListener(
     }
 
     @EventHandler
+    fun onEvent(event: PlayerSpawnLocationEvent) {
+        if (!event.player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
+            event.spawnLocation = ghostHandler.getGhostRespawnLocation()
+        }
+    }
+
+    @EventHandler
     fun onEvent(event: PlayerRespawnEvent) {
+        if (!event.player.hasPermission(GhostBan.HUMANITY_PERMISSION)) {
+            event.respawnLocation = ghostHandler.getGhostRespawnLocation()
+        }
         ghostHandler.handlePlayer(event.player)
     }
 
@@ -114,12 +127,18 @@ class GhostListener(
 
     @EventHandler
     fun onEvent(event: EntityDamageEvent) {
+        Bukkit.getLogger().log(
+            Level.WARNING,
+            "event ${event.entity} cause ${event.cause}"
+        )
         val entity = event.entity
         if (entity is Player) {
             when (event.cause) {
                 KILL,
                 WORLD_BORDER,
-                VOID -> {
+                VOID,
+                SUICIDE,
+                CUSTOM -> {
                     // ignore
                 }
                 else -> {

@@ -1,14 +1,19 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
+import by.siarhiejbahdaniec.ghostban.config.ConfigHolder
+import by.siarhiejbahdaniec.ghostban.config.ConfigKeys
 import by.siarhiejbahdaniec.ghostban.model.GhostedPlayer
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.WeatherType
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
 class GhostHandler(
     private val repo: GhostPlayersRepository,
+    private val configHolder: ConfigHolder,
 ) {
 
     fun handlePlayer(player: Player) {
@@ -20,6 +25,15 @@ class GhostHandler(
         } else {
             handleHumanity(player)
         }
+    }
+
+    fun getGhostRespawnLocation(): Location {
+        return Location(
+            Bukkit.getWorld(configHolder.getString(ConfigKeys.ghostSpawnWorld)),
+            configHolder.getDouble(ConfigKeys.ghostSpawnX),
+            configHolder.getDouble(ConfigKeys.ghostSpawnY),
+            configHolder.getDouble(ConfigKeys.ghostSpawnZ),
+        )
     }
 
     private fun handleGhost(player: Player) {

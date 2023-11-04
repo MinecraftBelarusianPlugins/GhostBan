@@ -8,6 +8,7 @@ import net.luckperms.api.LuckPerms
 import net.luckperms.api.event.node.NodeMutateEvent
 import net.luckperms.api.model.user.User
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 
@@ -21,11 +22,17 @@ class GhostBan : JavaPlugin(), ConfigHolder {
         repo = GhostPlayersRepository(
             dir = dataFolder
         ),
+        configHolder = this
     )
 
     override fun onEnable() {
         val pluginManager = Bukkit.getPluginManager()
-        pluginManager.registerEvents(GhostListener(ghostHandler), this)
+        pluginManager.registerEvents(
+            GhostListener(
+                ghostHandler = ghostHandler,
+            ),
+            this
+        )
 
         initLuckPermsObserver()
     }
@@ -42,7 +49,16 @@ class GhostBan : JavaPlugin(), ConfigHolder {
                 val player = Bukkit.getServer().getPlayer(target.uniqueId)
                 if (player != null) {
                     ghostHandler.handlePlayer(player)
+                    teleportIfPlayerIsGhost(player)
                 }
+            }
+        }
+    }
+
+    private fun teleportIfPlayerIsGhost(player: Player) {
+        if (!player.hasPermission(HUMANITY_PERMISSION)) {
+            Bukkit.getScheduler().callSyncMethod(this) {
+                player.teleport(ghostHandler.getGhostRespawnLocation())
             }
         }
     }
@@ -51,24 +67,12 @@ class GhostBan : JavaPlugin(), ConfigHolder {
         // Plugin shutdown logic
     }
 
-    override fun getString(key: String?): String {
-        return getString(key, "")
+    override fun getString(key: String): String {
+        return config.getString(key).orEmpty()
     }
 
-    override fun getString(key: String?, def: String?): String {
-        return getConfig().getString(key!!, def)!!
-    }
-
-    override fun getInt(key: String?): Int {
-        return getConfig().getInt(key!!)
-    }
-
-    override fun getBoolean(key: String?): Boolean {
-        return getConfig().getBoolean(key!!)
-    }
-
-    override fun getStringList(key: String?): List<String> {
-        return getConfig().getStringList(key!!)
+    override fun getDouble(key: String): Double {
+        return config.getDouble(key, 0.0)
     }
 
     override fun reloadConfigFromDisk() {
