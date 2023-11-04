@@ -5,11 +5,20 @@ import by.siarhiejbahdaniec.ghostban.config.ConfigHolder
 import by.siarhiejbahdaniec.ghostban.config.ConfigKeys
 import by.siarhiejbahdaniec.ghostban.model.GhostedPlayer
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.WeatherType
 import org.bukkit.attribute.Attribute
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
+import java.lang.reflect.Field
+import java.util.*
+
 
 class GhostHandler(
     private val repo: GhostPlayersRepository,
@@ -54,6 +63,7 @@ class GhostHandler(
         player.apply {
             inventory.clear()
             equipment?.clear()
+            inventory.helmet = getGhostSkull()
             saturation = 0f
             foodLevel = 0
             health = 0.1
@@ -77,5 +87,22 @@ class GhostHandler(
             resetPlayerWeather()
         }
         player.sendMessage(configHolder.getString(ConfigKeys.humanityMessage))
+    }
+
+    private fun getGhostSkull(): ItemStack {
+        val texture = configHolder.getString(ConfigKeys.ghostSkinTexture)
+        val skull = ItemStack(Material.PLAYER_HEAD).apply {
+            addEnchantment(Enchantment.BINDING_CURSE, 1)
+            addEnchantment(Enchantment.VANISHING_CURSE, 1)
+        }
+        val meta = skull.itemMeta as SkullMeta
+        val profile = GameProfile(UUID.randomUUID(), null)
+        profile.properties.put("textures", Property("textures", texture))
+        val profileField: Field = meta.javaClass.getDeclaredField("profile")
+        profileField.setAccessible(true)
+        profileField.set(meta, profile)
+        skull.setItemMeta(meta)
+        return skull
+
     }
 }

@@ -8,4 +8,6 @@ object ConfigKeys {
 
     const val ghostMessage = "ghost-message"
     const val humanityMessage = "humanity-message"
+
+    const val ghostSkinTexture = "ghost-skin-texture"
 }

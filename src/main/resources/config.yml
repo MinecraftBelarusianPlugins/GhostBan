@@ -5,5 +5,7 @@ ghost-spawn-point:
   z: 0
   world: "world"
 
+ghost-skin-texture: "e3RleHR1cmVzOntTS0lOOnsidXJsIjoiaHR0cHM6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2VhMWI4ZGQzNWYzNTZjYjY2YzY4MmVlYTc5MWRmODg0NDcyODFjNmQwMDZiODJjZjg1M2Q2OTQ1ZmY2YWRkNyJ9fX0="
+
 ghost-message: "Вы цалкам вычарпалі ўсе запасы чалавечнасці і ператварыліся ў прывіда. Вы больш не маеце магчымасці ўзаемадзейнічаць з асяроддзем, а маеце толькі магчымасць адчуваць пустыню паміж старым светам і новым."
 humanity-message: "Вы зноў чалавек. Пасля мноства дзён у стане прывіда, вы можаце адчуць цяпло сонца на вашай скуры і пачуць пульс вашага сэрца. Вы цяпер маеце магчымасць ўзаемадзейнічаць з асяроддзем, а ваша сувязь са старым светам аднавілася."
