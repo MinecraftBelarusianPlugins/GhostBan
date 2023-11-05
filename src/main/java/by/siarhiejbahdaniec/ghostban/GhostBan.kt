@@ -37,8 +37,9 @@ class GhostBan : JavaPlugin(), ConfigHolder {
         )
 
         requireNotNull(getCommand("ghostban_reload"))
-            .setExecutor { _, _, _, _ ->
+            .setExecutor { sender, _, _, _ ->
                 reloadConfigFromDisk()
+                sender.sendMessage("[GhostBan] Канфіг перазагружаны")
                 true
             }
 
