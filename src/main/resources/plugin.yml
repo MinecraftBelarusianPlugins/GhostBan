@@ -2,7 +2,7 @@ name: GhostBan
 version: '${version}'
 main: by.siarhiejbahdaniec.ghostban.GhostBan
 api-version: '1.20'
-depend: [LuckPerms]
+depend: [LuckPerms, kotlin-stdlib]
 commands:
   ghostban_reload:
     usage: /ghostban_reload
