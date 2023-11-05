@@ -1,7 +1,6 @@
 package by.siarhiejbahdaniec.ghostban.logic
 
 import by.siarhiejbahdaniec.ghostban.GhostBan
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.EventHandler
@@ -16,7 +15,6 @@ import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
-import java.util.logging.Level
 
 class GhostListener(
     private val ghostHandler: GhostHandler
@@ -127,10 +125,6 @@ class GhostListener(
 
     @EventHandler
     fun onEvent(event: EntityDamageEvent) {
-        Bukkit.getLogger().log(
-            Level.WARNING,
-            "event ${event.entity} cause ${event.cause}"
-        )
         val entity = event.entity
         if (entity is Player) {
             when (event.cause) {
