@@ -7,10 +7,7 @@ import by.siarhiejbahdaniec.ghostban.model.GhostedPlayer
 import by.siarhiejbahdaniec.ghostban.storage.GhostPlayersRepository
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.WeatherType
+import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -68,6 +65,7 @@ class GhostHandler(
             foodLevel = 0
             health = 0.1
             setPlayerWeather(WeatherType.DOWNFALL)
+            playSound(player, Sound.AMBIENT_CAVE, 10f, 10f)
         }
     }
 
